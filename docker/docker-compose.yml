@@ -13,8 +13,13 @@ services:
       POSTGRES_DB: keycloak
       POSTGRES_USER: keycloak
       POSTGRES_PASSWORD: password
+    networks:
+      - website-backend
   keycloak:
     image: quay.io/keycloak/keycloak:latest
+    volumes:
+      - ./keycloak/keycloak-db:/opt/jboss/keycloak/standalone/data
+      - ./keycloak/config:/tmp
     environment:
       DB_VENDOR: POSTGRES
       DB_ADDR: postgres
@@ -24,9 +29,25 @@ services:
       DB_PASSWORD: password
       KEYCLOAK_USER: admin
       KEYCLOAK_PASSWORD: Pa55w0rd
-      # Uncomment the line below if you want to specify JDBC parameters. The parameter below is just an example, and it shouldn't be used in production without knowledge. It is highly recommended that you read the PostgreSQL JDBC driver documentation in order to use it.
-      #JDBC_PARAMS: "ssl=true"
+      KEYCLOAK_IMPORT: /tmp/realm-export.json
     ports:
       - 8080:8080
     depends_on:
       - postgres
+    networks:
+      - website-backend
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    environment:
+      - PUID=1000
+      - PGID=1000
+    ports:
+      - 27017:27017
+    restart: always
+    networks:
+      - website-backend
+
+networks:
+  website-backend:
+      driver: bridge
