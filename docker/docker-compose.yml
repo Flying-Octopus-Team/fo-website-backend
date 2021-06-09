@@ -1,6 +1,41 @@
-version: "3.8"
+version: '3.8'
+
+volumes:
+  postgres_data:
+    driver: local
 
 services:
+  postgres:
+    image: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: password
+    networks:
+      - website-backend
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    volumes:
+      - ./keycloak/keycloak-db:/opt/jboss/keycloak/standalone/data
+      - ./keycloak/config:/tmp
+    environment:
+      DB_VENDOR: POSTGRES
+      DB_ADDR: postgres
+      DB_DATABASE: keycloak
+      DB_USER: keycloak
+      DB_SCHEMA: public
+      DB_PASSWORD: password
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: Pa55w0rd
+      KEYCLOAK_IMPORT: /tmp/realm-export.json
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres
+    networks:
+      - website-backend
   mongodb:
     image: mongo
     container_name: mongodb
@@ -10,3 +45,9 @@ services:
     ports:
       - 27017:27017
     restart: always
+    networks:
+      - website-backend
+
+networks:
+  website-backend:
+      driver: bridge
