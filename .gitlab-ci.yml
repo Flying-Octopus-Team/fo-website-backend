@@ -33,6 +33,7 @@ success_notification:
   stage: notification
   image: curlimages/curl
   script:
+    - apk add --no-cache bash
     - wget https://raw.githubusercontent.com/Flying-Octopus-Team/gitlab-ci-discord-webhook/master/send.sh
     - chmod +x send.sh
     - ./send.sh success $WEBHOOK_URL
@@ -46,6 +47,7 @@ failure_notification:
   stage: notification
   image: curlimages/curl
   script:
+    - apk add --no-cache bash
     - wget https://raw.githubusercontent.com/Flying-Octopus-Team/gitlab-ci-discord-webhook/master/send.sh
     - chmod +x send.sh
     - ./send.sh failure $WEBHOOK_URL
