@@ -5,7 +5,6 @@ image: maven:3.8.1-openjdk-16
 
 stages:
   - test
-  - build
   - notification
 
 variables:
@@ -30,10 +29,6 @@ test:
   stage: test
   script: mvn clean verify
 
-build:
-  stage: build
-  script: mvn clean install -DskipTests=true
-
 success_notification:
   stage: notification
   script:
@@ -45,7 +40,6 @@ success_notification:
       when: on_success
     - if: '$CI_COMMIT_BRANCH == "main"'
       when: on_success
-
 
 failure_notification:
   stage: notification
