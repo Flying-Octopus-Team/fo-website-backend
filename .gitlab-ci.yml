@@ -32,6 +32,7 @@ test:
 success_notification:
   stage: notification
   script:
+    - yum install wget -y
     - wget https://raw.githubusercontent.com/Flying-Octopus-Team/gitlab-ci-discord-webhook/master/send.sh
     - chmod +x send.sh
     - ./send.sh success $WEBHOOK_URL
@@ -44,6 +45,7 @@ success_notification:
 failure_notification:
   stage: notification
   script:
+    - yum install wget -y
     - wget https://raw.githubusercontent.com/Flying-Octopus-Team/gitlab-ci-discord-webhook/master/send.sh
     - chmod +x send.sh
     - ./send.sh failure $WEBHOOK_URL
