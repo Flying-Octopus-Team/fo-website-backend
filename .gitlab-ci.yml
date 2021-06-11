@@ -31,7 +31,7 @@ test:
 
 success_notification:
   stage: notification
-  image: alpine
+  image: curlimages/curl
   script:
     - wget https://raw.githubusercontent.com/Flying-Octopus-Team/gitlab-ci-discord-webhook/master/send.sh
     - chmod +x send.sh
@@ -44,9 +44,8 @@ success_notification:
 
 failure_notification:
   stage: notification
-  image: alpine
+  image: curlimages/curl
   script:
-    - yum install wget -y
     - wget https://raw.githubusercontent.com/Flying-Octopus-Team/gitlab-ci-discord-webhook/master/send.sh
     - chmod +x send.sh
     - ./send.sh failure $WEBHOOK_URL
